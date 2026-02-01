@@ -3,98 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ИБО | Соцсеть</title>
+    <title>ИБО</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
 </head>
-<body class="dark">
+<body>
 
-    <button class="ibo-floating-btn" onclick="openPostModal()">ИБО</button>
-
-    <nav class="sidebar">
+    <div id="screen-theme" class="screen">
         <div class="logo">ИБО</div>
-        <button onclick="showScreen('screen-main')">🏠</button>
-        <button onclick="showScreen('screen-profile')">👤</button>
-        <button onclick="alert('Секретные чаты в разработке')">🔒</button>
-        <div id="nav-avatar-display" class="nav-ava"></div>
-    </nav>
-
-    <div id="screen-theme" class="overlay">
-        <div class="card">
-            <h1 class="gradient-text">ИБО</h1>
-            <p>ВЫБЕРИ РЕЖИМ</p>
-            <button class="btn-theme" onclick="setTheme('dark')">ТЕМНЫЙ</button>
-            <button class="btn-theme light-btn" onclick="setTheme('light')">СВЕТЛЫЙ</button>
+        <p>ВЫБЕРИ СТОРОНУ</p>
+        <div class="flex-row">
+            <button class="btn-choice dark" onclick="setTheme('dark')">ЧЕРНЫЙ</button>
+            <button class="btn-choice light" onclick="setTheme('light')">БЕЛЫЙ</button>
         </div>
     </div>
 
-    <div id="screen-auth" class="overlay hidden">
-        <div class="card">
-            <h2>РЕГИСТРАЦИЯ</h2>
+    <div id="screen-reg" class="screen hidden">
+        <div class="auth-box">
+            <div class="logo">ИБО</div>
             <input type="text" id="reg-nick" placeholder="Никнейм">
             <input type="password" id="reg-pass" placeholder="Пароль">
-            <input type="email" id="reg-email" placeholder="Электронная почта">
-            <button class="btn-main" onclick="showScreen('screen-draw')">ДАЛЕЕ</button>
+            <button class="btn-next" onclick="showScreen('screen-email')">Далее</button>
         </div>
     </div>
 
-    <div id="screen-draw" class="overlay hidden">
-        <div class="card">
-            <h2>НАРИСУЙ СЕБЯ</h2>
+    <div id="screen-email" class="screen hidden">
+        <div class="auth-box">
+            <div class="logo">ИБО</div>
+            <p>Подтверждение почты</p>
+            <input type="email" id="reg-email" placeholder="Эл. почта">
+            <button class="btn-next" onclick="showScreen('screen-draw')">Получить код</button>
+        </div>
+    </div>
+
+    <div id="screen-draw" class="screen hidden">
+        <div class="auth-box paint-box">
+            <div class="logo" style="font-size: 24px;">ТВОЙ ВИД</div>
             <canvas id="paintCanvas" width="250" height="250"></canvas>
-            <div class="paint-tools">
+            <div class="controls">
                 <input type="range" id="brushSize" min="1" max="20" value="5">
-                <div class="palette">
+                <div class="colors">
                     <div class="color" style="background:#000" onclick="setColor('#000')"></div>
-                    <div class="color" style="background:#ff4b2b" onclick="setColor('#ff4b2b')"></div>
-                    <div class="color" style="background:#00d2ff" onclick="setColor('#00d2ff')"></div>
-                    <div class="color" style="background:#3aeb34" onclick="setColor('#3aeb34')"></div>
-                    <div class="color" style="background:#fff" onclick="setColor('#fff')"></div>
+                    <div class="color" style="background:#ff0000" onclick="setColor('#ff0000')"></div>
+                    <div class="color" style="background:#0095f6" onclick="setColor('#0095f6')"></div>
+                    <div class="color" style="background:#00ff00" onclick="setColor('#00ff00')"></div>
+                    <div class="color" style="background:#ffff00" onclick="setColor('#ffff00')"></div>
+                    <div class="color" style="background:#bc1888" onclick="setColor('#bc1888')"></div>
                 </div>
             </div>
-            <button class="btn-main" onclick="showScreen('screen-clans')">ГОТОВО</button>
+            <button class="btn-next" onclick="showScreen('screen-clans')">Готово</button>
         </div>
     </div>
 
-    <div id="screen-clans" class="overlay hidden">
-        <div class="card">
-            <h2>ВЫБЕРИ КЛАН</h2>
-            <div class="clan-list">
-                <div class="clan-opt" onclick="setClan('🔥')">🔥 ОГОНЬ</div>
-                <div class="clan-opt" onclick="setClan('🧊')">🧊 ЛЕД</div>
-                <div class="clan-opt" onclick="setClan('💀')">💀 ТЬМА</div>
-                <div class="clan-opt" onclick="setClan('⚡')">⚡ МОЛНИЯ</div>
-            </div>
-            <button class="btn-main" onclick="finishRegistration()">ВОЙТИ В СЕТЬ</button>
-        </div>
-    </div>
-
-    <main id="screen-main" class="content">
-        <div class="leaderboard">🏆 Лидер клана: <span id="top-clan-emoji">🔥</span></div>
-        <div id="feed"></div>
-    </main>
-
-    <div id="screen-profile" class="content hidden">
-        <div class="profile-header">
-            <img id="p-avatar" src="" alt="">
-            <h1 id="p-name">Имя</h1>
-            <p id="p-clan">Клан</p>
-            <div class="p-stats">
-                <span>Друзей: 0</span> | <span>Постов: <b id="p-post-count">0</b></span>
+    <div id="screen-clans" class="screen hidden">
+        <div class="auth-box">
+            <div class="logo" style="font-size: 24px;">ВЫБЕРИ КЛАН</div>
+            <div class="clan-grid">
+                <div class="clan-item" onclick="selectClan('🔥')">🔥</div>
+                <div class="clan-item" onclick="selectClan('⚡')">⚡</div>
+                <div class="clan-item" onclick="selectClan('💎')">💎</div>
+                <div class="clan-item" onclick="selectClan('💀')">💀</div>
+                <div class="clan-item" onclick="selectClan('👑')">👑</div>
             </div>
         </div>
     </div>
 
-    <div id="modal-ibo" class="overlay hidden">
-        <div class="card">
-            <h3>НОВЫЙ ПОСТ</h3>
-            <textarea id="post-text" placeholder="Что происходит?"></textarea>
-            <div class="voice-engine">
-                <button id="mic-btn" class="mic-inactive">🎤 Начать запись</button>
-                <p id="mic-status">Микрофон готов</p>
+    <div id="screen-main" class="screen hidden">
+        <header>
+            <div class="header-content">
+                <div class="mini-logo">ИБО</div>
+                <div class="header-btns">
+                    <button class="icon-btn" onclick="toggleSearch()">🔍</button>
+                    <button class="icon-btn" onclick="alert('Чаты в разработке')">💬</button>
+                    <button class="ibo-btn" onclick="openPostModal()">ИБО</button>
+                </div>
             </div>
-            <button class="btn-main" onclick="publishPost()">ОПУБЛИКОВАТЬ</button>
-            <button class="btn-cancel" onclick="closePostModal()">ОТМЕНА</button>
+        </header>
+
+        <div class="main-container">
+            <div id="search-bar" class="hidden">
+                <input type="text" id="search-input" placeholder="Поиск людей или постов..." onkeyup="search()">
+                <div class="search-tabs">
+                    <span onclick="search()">Все</span>
+                    <span onclick="search()">Люди</span>
+                    <span onclick="search()">Посты</span>
+                </div>
+            </div>
+
+            <div id="clan-rating">
+                <div class="clan-rank">👑 Рейтинг: <span id="top-clan">🔥</span></div>
+            </div>
+
+            <div id="feed">
+                </div>
         </div>
     </div>
 
