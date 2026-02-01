@@ -1,1 +1,40 @@
+:root { --bg: #000; --text: #fff; --accent: #fff; }
+body.light { --bg: #fff; --text: #000; --accent: #000; }
 
+body { 
+    background: var(--bg); color: var(--text); 
+    margin: 0; font-family: sans-serif; transition: 0.3s;
+}
+
+.screen { 
+    display: flex; flex-direction: column; align-items: center; 
+    justify-content: center; min-height: 100vh; width: 100%;
+}
+
+.hidden { display: none !important; }
+
+/* Кнопки и инпуты */
+.btn-big { padding: 30px; font-size: 20px; border: 2px solid var(--text); cursor: pointer; background: transparent; color: var(--text); width: 150px; }
+input { background: transparent; border: none; border-bottom: 2px solid var(--text); color: var(--text); padding: 10px; margin: 10px; font-size: 18px; outline: none; }
+
+/* Рисование */
+#paintCanvas { border: 2px solid var(--text); background: #eee; cursor: crosshair; }
+.colors { display: flex; gap: 5px; margin-top: 10px; }
+.color { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 1px solid #ccc; }
+
+/* Шапка ленты */
+header { 
+    position: fixed; top: 0; width: 100%; max-width: 600px;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px; background: var(--bg); border-bottom: 1px solid #333;
+}
+.ibo-btn { background: var(--text); color: var(--bg); border: none; padding: 5px 15px; border-radius: 20px; font-weight: bold; }
+
+/* Рейтинг кланов */
+#clan-rating { margin-top: 80px; display: flex; gap: 10px; font-size: 12px; }
+.clan-rank { padding: 5px; border: 1px solid #333; border-radius: 5px; }
+
+/* Адаптивность под ПК */
+@media (min-width: 800px) {
+    #screen-main { max-width: 600px; margin: 0 auto; border-left: 1px solid #333; border-right: 1px solid #333; }
+}
