@@ -1,62 +1,26 @@
-:root {
-    --bg: #050505;
-    --glass: rgba(255, 255, 255, 0.03);
-    --border: rgba(255, 255, 255, 0.1);
-    --accent: #00f2ff;
-    --text: #ffffff;
-}
-body.light {
-    --bg: #f0f2f5;
-    --glass: rgba(0, 0, 0, 0.03);
-    --border: rgba(0, 0, 0, 0.1);
-    --accent: #007bff;
-    --text: #111;
-}
+body { margin: 0; background: #050505; color: white; font-family: sans-serif; display: flex; }
+.hidden { display: none !important; }
 
-body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Manrope', sans-serif; display: flex; transition: 0.5s; }
+/* Меню */
+.side-nav { width: 60px; height: 100vh; background: #111; display: flex; flex-direction: column; align-items: center; padding: 10px; border-right: 1px solid #222; position: fixed; }
+.side-nav button { background: none; border: none; color: white; font-size: 25px; margin: 20px 0; cursor: pointer; }
+.nav-ava { width: 40px; height: 40px; border: 2px solid #00f2ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: auto; }
 
-/* БОКОВАЯ ПАНЕЛЬ */
-.sidebar {
-    width: 80px; height: 100vh; background: var(--glass); 
-    backdrop-filter: blur(10px); border-right: 1px solid var(--border);
-    display: flex; flex-direction: column; align-items: center; padding: 20px 0;
-    position: fixed; z-index: 100;
-}
-.nav-link {
-    background: none; border: none; font-size: 22px; margin: 15px 0;
-    cursor: pointer; color: var(--text); opacity: 0.5; transition: 0.3s;
-}
-.nav-link:hover, .nav-link.active { opacity: 1; transform: scale(1.1); color: var(--accent); }
-.user-pill { width: 45px; height: 45px; border-radius: 15px; border: 2px solid var(--accent); cursor: pointer; overflow: hidden; }
+/* Контент */
+.main-content { margin-left: 80px; padding: 20px; width: 100%; display: flex; flex-direction: column; align-items: center; }
 
-/* ГЛАВНАЯ КНОПКА */
-.ibo-btn-main {
-    position: fixed; top: 20px; right: 20px; z-index: 1000;
-    background: linear-gradient(135deg, var(--accent), #7000ff);
-    color: #fff; border: none; padding: 12px 35px; border-radius: 15px;
-    font-weight: 800; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-}
+/* Карточки */
+.overlay { position: fixed; inset: 0; background: #000; z-index: 100; display: flex; align-items: center; justify-content: center; }
+.card { background: #111; padding: 30px; border-radius: 20px; border: 1px solid #222; text-align: center; width: 300px; }
+.glow { font-size: 50px; color: #00f2ff; text-shadow: 0 0 10px #00f2ff; }
 
-/* КАРТОЧКИ ПОСТОВ */
-.post-card {
-    background: var(--glass); border: 1px solid var(--border);
-    border-radius: 25px; padding: 25px; margin-bottom: 25px;
-    width: 100%; max-width: 550px; backdrop-filter: blur(5px);
-}
-.post-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
-.post-header img { width: 50px; height: 50px; border-radius: 18px; object-fit: cover; }
+/* Кнопки */
+button { background: #222; color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; margin: 5px; }
+button:hover { background: #333; }
+.ibo-btn { position: fixed; top: 10px; right: 10px; background: #00f2ff; color: black; font-weight: bold; border-radius: 20px; z-index: 50; }
 
-/* ЭФФЕКТЫ */
-.glow-text {
-    font-size: 80px; font-weight: 900; letter-spacing: -5px;
-    background: linear-gradient(to bottom, #fff, #444);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 0 20px rgba(255,255,255,0.2));
-}
-
-/* ПОИСК */
-.search-bar-top { width: 100%; max-width: 550px; margin-bottom: 30px; }
-.search-bar-top input {
-    width: 100%; background: var(--glass); border: 1px solid var(--border);
-    padding: 15px; border-radius: 15px; color: #fff; outline: none;
-}
+/* Посты */
+.post { background: #161616; padding: 15px; border-radius: 15px; margin-bottom: 10px; width: 100%; max-width: 400px; border-left: 4px solid #00f2ff; }
+#canvas { background: white; cursor: crosshair; margin: 10px 0; border-radius: 10px; }
+.mic-on { background: red !important; }
+textarea { width: 100%; background: #000; color: white; border: 1px solid #222; border-radius: 10px; padding: 10px; }
