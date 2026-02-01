@@ -1,38 +1,158 @@
-:root { --bg: #0a0a0a; --card: #161616; --text: #fff; --accent: #00d2ff; }
-body.light { --bg: #f9f9f9; --card: #fff; --text: #1a1a1a; --accent: #007bff; }
+:root {
+    --bg: #fafafa;
+    --card: #ffffff;
+    --text: #262626;
+    --accent: #0095f6;
+    --border: #dbdbdb;
+    --insta-grad: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+}
 
-body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Manrope', sans-serif; display: flex; transition: 0.3s; }
+body.dark {
+    --bg: #000000;
+    --card: #121212;
+    --text: #ffffff;
+    --border: #333333;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    transition: 0.3s;
+}
+
+.screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
 .hidden { display: none !important; }
 
-/* Боковое меню */
-.sidebar { width: 80px; height: 100vh; border-right: 1px solid rgba(128,128,128,0.2); display: flex; flex-direction: column; align-items: center; padding-top: 20px; position: fixed; }
-.sidebar button { background: none; border: none; color: var(--text); font-size: 24px; margin: 20px 0; cursor: pointer; opacity: 0.6; }
-.sidebar button:hover { opacity: 1; }
-.nav-ava { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--accent); margin-top: auto; margin-bottom: 20px; overflow: hidden; }
+/* ЛОГОТИП */
+.logo {
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: -2px;
+    background: var(--insta-grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+}
 
-/* Кнопка ИБО */
-.ibo-floating-btn { position: fixed; top: 20px; right: 20px; z-index: 1000; background: var(--accent); color: #fff; border: none; padding: 12px 30px; border-radius: 30px; font-weight: 800; cursor: pointer; box-shadow: 0 5px 20px rgba(0, 210, 255, 0.4); }
+.mini-logo {
+    font-weight: 800;
+    background: var(--insta-grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 24px;
+}
 
-/* Карточки регистрации */
-.overlay { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: flex; align-items: center; justify-content: center; }
-.card { background: var(--card); padding: 40px; border-radius: 32px; text-align: center; width: 100%; max-width: 360px; border: 1px solid rgba(128,128,128,0.1); }
-.gradient-text { font-size: 60px; background: linear-gradient(45deg, #00d2ff, #9d50bb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+/* КАРТОЧКИ (INSTA/FB STYLE) */
+.auth-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 40px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 350px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
 
-/* Рисовалка */
-#paintCanvas { background: #fff; border-radius: 20px; margin: 20px 0; cursor: crosshair; }
-.palette { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
-.color { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid rgba(0,0,0,0.1); }
+.post {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 500px;
+    overflow: hidden;
+    animation: fadeIn 0.4s ease;
+}
 
-/* Лента */
-.content { flex: 1; margin-left: 80px; padding: 40px; display: flex; flex-direction: column; align-items: center; }
-.post-card { background: var(--card); border-radius: 24px; padding: 20px; width: 100%; max-width: 500px; margin-bottom: 20px; border: 1px solid rgba(128,128,128,0.1); }
-.post-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
-.post-header img { width: 48px; height: 48px; border-radius: 50%; }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
-/* Голосовые */
-.voice-msg { background: rgba(0, 210, 255, 0.1); padding: 10px; border-radius: 15px; margin-top: 10px; display: flex; align-items: center; gap: 10px; }
-audio { height: 30px; filter: invert(0.8); }
+/* ИНПУТЫ И КНОПКИ */
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+    box-sizing: border-box;
+}
 
-/* Инпуты */
-input, textarea { width: 100%; padding: 14px; margin: 10px 0; border-radius: 12px; border: 1px solid rgba(128,128,128,0.2); background: rgba(128,128,128,0.05); color: var(--text); box-sizing: border-box; }
-.btn-main { background: var(--accent); color: #fff; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 10px; }
+.btn-next, .ibo-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+}
+
+.ibo-btn { width: auto; border-radius: 20px; }
+
+/* РИСОВАЛКА */
+#paintCanvas {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    cursor: crosshair;
+}
+
+.colors { display: flex; justify-content: center; gap: 8px; margin-bottom: 15px; }
+.color { width: 25px; height: 25px; border-radius: 50%; cursor: pointer; border: 2px solid var(--border); }
+
+/* ШАПКА */
+header {
+    position: fixed; top: 0; width: 100%;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.header-content {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.main-container {
+    margin-top: 80px;
+    width: 100%;
+    max-width: 500px;
+}
+
+.icon-btn {
+    background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text);
+}
+
+.clan-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px;
+}
+
+.clan-item {
+    font-size: 40px; cursor: pointer; padding: 10px; border: 1px solid var(--border); border-radius: 12px; transition: 0.2s;
+}
+
+.clan-item:hover { background: var(--border); }
