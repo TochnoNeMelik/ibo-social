@@ -1,99 +1,131 @@
-let user = JSON.parse(localStorage.getItem('user')) || null;
-let posts = JSON.parse(localStorage.getItem('posts')) || [];
-let clan = '🔥', color = '#000', drawing = false, recorder, chunks = [], audioURL = null;
+let app = {
+    user: JSON.parse(localStorage.getItem('ibo_user')) || null,
+    posts: JSON.parse(localStorage.getItem('ibo_posts')) || [],
+    brushColor: '#000',
+    recorder: null,
+    chunks: [],
+    audioBlob: null,
+    tempClan: '🔥'
+};
 
-// ИНИЦИАЛИЗАЦИЯ
-if(user) {
-    document.getElementById('reg-1').classList.add('hidden');
-    loadProfile();
+window.onload = () => {
+    if (app.user) {
+        document.getElementById('screen-theme').classList.add('hidden');
+        initApp();
+    }
+};
+
+// ТЕМА
+function setTheme(t) {
+    if(t === 'light') document.body.classList.add('light');
+    showScreen('screen-auth');
 }
 
-// РЕГИСТРАЦИЯ
-function nextStep(n) {
-    document.querySelectorAll('.overlay').forEach(o => o.classList.add('hidden'));
-    document.getElementById('reg-'+n).classList.remove('hidden');
-    if(n === 2) initDraw();
-}
-
-function initDraw() {
-    const canvas = document.getElementById('canvas');
+// РИСОВАНИЕ
+function initCanvas() {
+    const canvas = document.getElementById('paintCanvas');
     const ctx = canvas.getContext('2d');
+    let drawing = false;
+
     canvas.onmousedown = () => drawing = true;
     canvas.onmouseup = () => { drawing = false; ctx.beginPath(); };
     canvas.onmousemove = (e) => {
-        if(!drawing) return;
-        ctx.lineWidth = 5; ctx.strokeStyle = color;
-        ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke();
+        if (!drawing) return;
+        const rect = canvas.getBoundingClientRect();
+        ctx.lineWidth = document.getElementById('brushSize').value;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = app.brushColor;
+        ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+        ctx.stroke();
     };
 }
-function setCol(c) { color = c; }
-function setClan(c) { clan = c; alert("Выбран: " + c); }
+function setColor(c) { app.brushColor = c; }
 
-function finishReg() {
-    user = {
-        name: document.getElementById('nick').value,
-        clan: clan,
-        ava: document.getElementById('canvas').toDataURL()
+// РЕГИСТРАЦИЯ
+function setClan(c) { app.tempClan = c; alert('Выбран клан ' + c); }
+
+function finishRegistration() {
+    const canvas = document.getElementById('paintCanvas');
+    app.user = {
+        name: document.getElementById('reg-nick').value,
+        clan: app.tempClan,
+        ava: canvas.toDataURL(),
+        email: document.getElementById('reg-email').value
     };
-    localStorage.setItem('user', JSON.stringify(user));
-    location.reload();
+    localStorage.setItem('ibo_user', JSON.stringify(app.user));
+    initApp();
+    showScreen('screen-main');
 }
 
-// ПОСТЫ И ГОЛОС
-async function startVoice() {
+// ГОЛОС (НАСТОЯЩИЙ)
+async function startMic() {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    recorder = new MediaRecorder(stream);
-    chunks = [];
-    recorder.ondataavailable = e => chunks.push(e.data);
-    recorder.onstop = () => {
-        const blob = new Blob(chunks, { type: 'audio/ogg' });
-        audioURL = URL.createObjectURL(blob);
-        document.getElementById('mic').innerText = "✅ ЗАПИСАНО";
+    app.recorder = new MediaRecorder(stream);
+    app.chunks = [];
+    app.recorder.ondataavailable = e => app.chunks.push(e.data);
+    app.recorder.onstop = () => {
+        const blob = new Blob(app.chunks, { type: 'audio/ogg; codecs=opus' });
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = () => { app.audioBlob = reader.result; };
+        document.getElementById('mic-status').innerText = "✅ Записано!";
     };
-    recorder.start();
-    document.getElementById('mic').classList.add('mic-on');
-    document.getElementById('mic').onclick = () => { recorder.stop(); document.getElementById('mic').classList.remove('mic-on'); };
-}
-document.getElementById('mic').onclick = startVoice;
-
-function savePost() {
-    const txt = document.getElementById('post-text').value;
-    posts.unshift({ name: user.name, clan: user.clan, ava: user.ava, text: txt, audio: audioURL });
-    localStorage.setItem('posts', JSON.stringify(posts));
-    location.reload();
+    app.recorder.start();
+    document.getElementById('mic-status').innerText = "🔴 Запись...";
+    document.getElementById('mic-btn').onclick = stopMic;
 }
 
-function renderFeed(data = posts) {
+function stopMic() {
+    app.recorder.stop();
+    document.getElementById('mic-btn').onclick = startMic;
+}
+document.getElementById('mic-btn').onclick = startMic;
+
+// ПОСТЫ
+function publishPost() {
+    const text = document.getElementById('post-text').value;
+    const post = {
+        name: app.user.name,
+        ava: app.user.ava,
+        clan: app.user.clan,
+        text: text,
+        audio: app.audioBlob,
+        id: Date.now()
+    };
+    app.posts.unshift(post);
+    localStorage.setItem('ibo_posts', JSON.stringify(app.posts));
+    renderFeed();
+    closePostModal();
+    app.audioBlob = null;
+}
+
+function renderFeed() {
     const feed = document.getElementById('feed');
-    feed.innerHTML = data.map(p => `
-        <div class="post">
-            <img src="${p.ava}" style="width:30px; border-radius:50%"> <b>${p.name}</b> ${p.clan}
-            <p>${p.text}</p>
-            ${p.audio ? `<audio src="${p.audio}" controls></audio>` : ''}
+    feed.innerHTML = app.posts.map(p => `
+        <div class="post-card">
+            <div class="post-header">
+                <img src="${p.ava}">
+                <div><b>${p.name}</b> <span>${p.clan}</span></div>
+            </div>
+            <div>${p.text}</div>
+            ${p.audio ? `<div class="voice-msg"><audio src="${p.audio}" controls></audio></div>` : ''}
         </div>
     `).join('');
 }
 
-// НАВИГАЦИЯ
+function initApp() {
+    document.getElementById('nav-avatar-display').innerHTML = `<img src="${app.user.ava}" style="width:100%">`;
+    document.getElementById('p-avatar').src = app.user.ava;
+    document.getElementById('p-name').innerText = app.user.name;
+    document.getElementById('p-clan').innerText = 'Клан: ' + app.user.clan;
+    document.getElementById('p-post-count').innerText = app.posts.length;
+    renderFeed();
+}
+
 function showScreen(id) {
-    document.querySelectorAll('.main-content').forEach(s => s.classList.add('hidden'));
+    document.querySelectorAll('.overlay, .content').forEach(s => s.classList.add('hidden'));
     document.getElementById(id).classList.remove('hidden');
-    if(id === 'screen-main') renderFeed();
+    if(id === 'screen-draw') initCanvas();
 }
-
-function loadProfile() {
-    document.getElementById('my-nick').innerText = user.name;
-    document.getElementById('my-clan').innerText = user.clan;
-    document.getElementById('my-ava').src = user.ava;
-    document.getElementById('user-tag').innerHTML = `<img src="${user.ava}" style="width:100%; border-radius:50%">`;
-    showScreen('screen-main');
-}
-
-function toggleSearch() { document.getElementById('search-box').classList.toggle('hidden'); }
-function doSearch() {
-    const q = document.getElementById('search-in').value.toLowerCase();
-    const filtered = posts.filter(p => p.text.toLowerCase().includes(q) || p.name.toLowerCase().includes(q));
-    renderFeed(filtered);
-}
-function openModal() { document.getElementById('modal').classList.remove('hidden'); }
-function closeModal() { document.getElementById('modal').classList.add('hidden'); }
+function openPostModal() { document.getElementById('modal-ibo').classList.remove('hidden'); }
+function closePostModal() { document.getElementById('modal-ibo').classList.add('hidden'); }
