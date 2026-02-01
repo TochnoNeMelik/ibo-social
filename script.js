@@ -1,102 +1,99 @@
-let state = {
-    user: JSON.parse(localStorage.getItem('ibo_u')) || null,
-    posts: JSON.parse(localStorage.getItem('ibo_p')) || [],
-    audio: null,
-    recorder: null
-};
+let user = JSON.parse(localStorage.getItem('user')) || null;
+let posts = JSON.parse(localStorage.getItem('posts')) || [];
+let clan = '🔥', color = '#000', drawing = false, recorder, chunks = [], audioURL = null;
 
 // ИНИЦИАЛИЗАЦИЯ
-window.onload = () => {
-    if(!state.user) {
-        showScreen('screen-theme');
-    } else {
-        updateProfileUI();
-        renderFeed();
-    }
-};
-
-function toggleSearch() {
-    document.getElementById('top-search').classList.toggle('hidden');
+if(user) {
+    document.getElementById('reg-1').classList.add('hidden');
+    loadProfile();
 }
 
-// ЗАПИСЬ ГОЛОСА С АНИМАЦИЕЙ
+// РЕГИСТРАЦИЯ
+function nextStep(n) {
+    document.querySelectorAll('.overlay').forEach(o => o.classList.add('hidden'));
+    document.getElementById('reg-'+n).classList.remove('hidden');
+    if(n === 2) initDraw();
+}
+
+function initDraw() {
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.onmousedown = () => drawing = true;
+    canvas.onmouseup = () => { drawing = false; ctx.beginPath(); };
+    canvas.onmousemove = (e) => {
+        if(!drawing) return;
+        ctx.lineWidth = 5; ctx.strokeStyle = color;
+        ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke();
+    };
+}
+function setCol(c) { color = c; }
+function setClan(c) { clan = c; alert("Выбран: " + c); }
+
+function finishReg() {
+    user = {
+        name: document.getElementById('nick').value,
+        clan: clan,
+        ava: document.getElementById('canvas').toDataURL()
+    };
+    localStorage.setItem('user', JSON.stringify(user));
+    location.reload();
+}
+
+// ПОСТЫ И ГОЛОС
 async function startVoice() {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    state.recorder = new MediaRecorder(stream);
-    let chunks = [];
-    state.recorder.ondataavailable = e => chunks.push(e.data);
-    state.recorder.onstop = () => {
-        const blob = new Blob(chunks, { type: 'audio/ogg; codecs=opus' });
-        const reader = new FileReader();
-        reader.readAsDataURL(blob);
-        reader.onloadend = () => { state.audio = reader.result; };
-        document.getElementById('wave').classList.remove('active');
+    recorder = new MediaRecorder(stream);
+    chunks = [];
+    recorder.ondataavailable = e => chunks.push(e.data);
+    recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'audio/ogg' });
+        audioURL = URL.createObjectURL(blob);
+        document.getElementById('mic').innerText = "✅ ЗАПИСАНО";
     };
-    state.recorder.start();
-    document.getElementById('wave').classList.add('active');
-    document.getElementById('mic-btn').onclick = stopVoice;
+    recorder.start();
+    document.getElementById('mic').classList.add('mic-on');
+    document.getElementById('mic').onclick = () => { recorder.stop(); document.getElementById('mic').classList.remove('mic-on'); };
 }
+document.getElementById('mic').onclick = startVoice;
 
-function stopVoice() {
-    state.recorder.stop();
-    document.getElementById('mic-btn').onclick = startVoice;
-}
-document.getElementById('mic-btn').onclick = startVoice;
-
-// ПУБЛИКАЦИЯ
-function publishPost() {
+function savePost() {
     const txt = document.getElementById('post-text').value;
-    const post = {
-        id: Date.now(),
-        author: state.user.name,
-        ava: state.user.ava,
-        clan: state.user.clan,
-        text: txt,
-        audio: state.audio,
-        likes: 0
-    };
-    state.posts.unshift(post);
-    localStorage.setItem('ibo_p', JSON.stringify(state.posts));
-    renderFeed();
-    closePostModal();
-    state.audio = null;
+    posts.unshift({ name: user.name, clan: user.clan, ava: user.ava, text: txt, audio: audioURL });
+    localStorage.setItem('posts', JSON.stringify(posts));
+    location.reload();
 }
 
-function renderFeed() {
+function renderFeed(data = posts) {
     const feed = document.getElementById('feed');
-    feed.innerHTML = state.posts.map(p => `
-        <div class="post-card">
-            <div class="post-header">
-                <img src="${p.ava}">
-                <div>
-                    <b>${p.author}</b> <small style="color:var(--accent)">${p.clan}</small>
-                </div>
-            </div>
-            <div class="post-body">${p.text}</div>
-            ${p.audio ? `<audio src="${p.audio}" controls style="margin-top:15px; width:100%; filter:invert(1)"></audio>` : ''}
-            <div class="post-footer" style="margin-top:15px; opacity:0.6; display:flex; gap:20px;">
-                <span onclick="alert('Лайк!')">🤍 ${p.likes}</span>
-                <span onclick="alert('Комменты в разработке')">💬 0</span>
-                <span onclick="alert('Репост')">🔁</span>
-            </div>
+    feed.innerHTML = data.map(p => `
+        <div class="post">
+            <img src="${p.ava}" style="width:30px; border-radius:50%"> <b>${p.name}</b> ${p.clan}
+            <p>${p.text}</p>
+            ${p.audio ? `<audio src="${p.audio}" controls></audio>` : ''}
         </div>
     `).join('');
 }
 
-function filterFeed() {
-    const q = document.getElementById('global-search').value.toLowerCase();
-    const filtered = state.posts.filter(p => p.text.toLowerCase().includes(q) || p.author.toLowerCase().includes(q));
-    // Тут можно перерисовать только отфильтрованное
-}
-
-function updateProfileUI() {
-    document.getElementById('nav-avatar').innerHTML = `<img src="${state.user.ava}" style="width:100%; height:100%; object-fit:cover;">`;
-    document.getElementById('p-ava').src = state.user.ava;
-    document.getElementById('p-name').innerText = state.user.name;
-    document.getElementById('p-count').innerText = state.posts.length;
-}
-
+// НАВИГАЦИЯ
 function showScreen(id) {
-    document.querySelectorAll('.content, .overlay').forEach(s => s.classList.add('hidden'));
+    document.querySelectorAll('.main-content').forEach(s => s.classList.add('hidden'));
     document.getElementById(id).classList.remove('hidden');
+    if(id === 'screen-main') renderFeed();
 }
+
+function loadProfile() {
+    document.getElementById('my-nick').innerText = user.name;
+    document.getElementById('my-clan').innerText = user.clan;
+    document.getElementById('my-ava').src = user.ava;
+    document.getElementById('user-tag').innerHTML = `<img src="${user.ava}" style="width:100%; border-radius:50%">`;
+    showScreen('screen-main');
+}
+
+function toggleSearch() { document.getElementById('search-box').classList.toggle('hidden'); }
+function doSearch() {
+    const q = document.getElementById('search-in').value.toLowerCase();
+    const filtered = posts.filter(p => p.text.toLowerCase().includes(q) || p.name.toLowerCase().includes(q));
+    renderFeed(filtered);
+}
+function openModal() { document.getElementById('modal').classList.remove('hidden'); }
+function closeModal() { document.getElementById('modal').classList.add('hidden'); }
