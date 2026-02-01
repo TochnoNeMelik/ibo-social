@@ -3,99 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ИБО</title>
+    <title>ИБО | ИТД Style</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="dark"> <nav class="side-menu">
+        <div class="mini-logo">ИБО</div>
+        <button class="menu-item" onclick="showScreen('screen-main')">🏠</button>
+        <button class="menu-item" onclick="showScreen('screen-search')">🔍</button>
+        <button class="menu-item" onclick="showScreen('screen-dashboard')">📊</button>
+        <button class="menu-item plus-btn" onclick="openPostModal()">+</button>
+    </nav>
 
-    <div id="screen-theme" class="screen">
-        <div class="logo">ИБО</div>
-        <p>ВЫБЕРИ СТОРОНУ</p>
-        <div class="flex-row">
-            <button class="btn-choice dark" onclick="setTheme('dark')">ЧЕРНЫЙ</button>
-            <button class="btn-choice light" onclick="setTheme('light')">БЕЛЫЙ</button>
-        </div>
-    </div>
+    <main id="screen-main" class="screen">
+        <div class="feed-container" id="feed">
+            </div>
+    </main>
 
-    <div id="screen-reg" class="screen hidden">
-        <div class="auth-box">
-            <div class="logo">ИБО</div>
-            <input type="text" id="reg-nick" placeholder="Никнейм">
-            <input type="password" id="reg-pass" placeholder="Пароль">
-            <button class="btn-next" onclick="showScreen('screen-email')">Далее</button>
-        </div>
-    </div>
-
-    <div id="screen-email" class="screen hidden">
-        <div class="auth-box">
-            <div class="logo">ИБО</div>
-            <p>Подтверждение почты</p>
-            <input type="email" id="reg-email" placeholder="Эл. почта">
-            <button class="btn-next" onclick="showScreen('screen-draw')">Получить код</button>
-        </div>
-    </div>
-
-    <div id="screen-draw" class="screen hidden">
-        <div class="auth-box paint-box">
-            <div class="logo" style="font-size: 24px;">ТВОЙ ВИД</div>
-            <canvas id="paintCanvas" width="250" height="250"></canvas>
-            <div class="controls">
-                <input type="range" id="brushSize" min="1" max="20" value="5">
-                <div class="colors">
-                    <div class="color" style="background:#000" onclick="setColor('#000')"></div>
-                    <div class="color" style="background:#ff0000" onclick="setColor('#ff0000')"></div>
-                    <div class="color" style="background:#0095f6" onclick="setColor('#0095f6')"></div>
-                    <div class="color" style="background:#00ff00" onclick="setColor('#00ff00')"></div>
-                    <div class="color" style="background:#ffff00" onclick="setColor('#ffff00')"></div>
-                    <div class="color" style="background:#bc1888" onclick="setColor('#bc1888')"></div>
+    <div id="screen-dashboard" class="screen hidden">
+        <div class="dash-container">
+            <h1>Welcome back!</h1>
+            <p>Вот что происходит на платформе сегодня:</p>
+            <div class="stat-grid">
+                <div class="stat-card blue">
+                    <span class="icon">👤</span>
+                    <div class="num" id="stat-users">8</div>
+                    <div class="label">Всего юзеров</div>
+                </div>
+                <div class="stat-card green">
+                    <span class="icon">📝</span>
+                    <div class="num" id="stat-posts">12</div>
+                    <div class="label">Постов создано</div>
+                </div>
+                <div class="stat-card yellow">
+                    <span class="icon">💬</span>
+                    <div class="num" id="stat-comments">24</div>
+                    <div class="label">Комментариев</div>
+                </div>
+                <div class="stat-card live">
+                    <span class="icon">🟢</span>
+                    <div class="num">3</div>
+                    <div class="label">Онлайн</div>
                 </div>
             </div>
-            <button class="btn-next" onclick="showScreen('screen-clans')">Готово</button>
         </div>
     </div>
 
-    <div id="screen-clans" class="screen hidden">
-        <div class="auth-box">
-            <div class="logo" style="font-size: 24px;">ВЫБЕРИ КЛАН</div>
-            <div class="clan-grid">
-                <div class="clan-item" onclick="selectClan('🔥')">🔥</div>
-                <div class="clan-item" onclick="selectClan('⚡')">⚡</div>
-                <div class="clan-item" onclick="selectClan('💎')">💎</div>
-                <div class="clan-item" onclick="selectClan('💀')">💀</div>
-                <div class="clan-item" onclick="selectClan('👑')">👑</div>
-            </div>
-        </div>
-    </div>
-
-    <div id="screen-main" class="screen hidden">
-        <header>
-            <div class="header-content">
-                <div class="mini-logo">ИБО</div>
-                <div class="header-btns">
-                    <button class="icon-btn" onclick="toggleSearch()">🔍</button>
-                    <button class="icon-btn" onclick="alert('Чаты в разработке')">💬</button>
-                    <button class="ibo-btn" onclick="openPostModal()">ИБО</button>
-                </div>
-            </div>
-        </header>
-
-        <div class="main-container">
-            <div id="search-bar" class="hidden">
-                <input type="text" id="search-input" placeholder="Поиск людей или постов..." onkeyup="search()">
-                <div class="search-tabs">
-                    <span onclick="search()">Все</span>
-                    <span onclick="search()">Люди</span>
-                    <span onclick="search()">Посты</span>
-                </div>
-            </div>
-
-            <div id="clan-rating">
-                <div class="clan-rank">👑 Рейтинг: <span id="top-clan">🔥</span></div>
-            </div>
-
-            <div id="feed">
-                </div>
+    <div id="screen-reg" class="screen-overlay">
+        <div class="auth-card">
+            <div class="logo-circle">🌐</div>
+            <h2>Добро пожаловать!</h2>
+            <p>Настрой свой профиль</p>
+            <input type="text" id="reg-nick" placeholder="Имя">
+            <input type="text" id="reg-user" placeholder="@юзернейм">
+            <button class="start-btn" onclick="finishReg()">Начать</button>
         </div>
     </div>
 
