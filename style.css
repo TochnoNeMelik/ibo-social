@@ -1,40 +1,158 @@
-:root { --bg: #000; --text: #fff; --accent: #fff; }
-body.light { --bg: #fff; --text: #000; --accent: #000; }
-
-body { 
-    background: var(--bg); color: var(--text); 
-    margin: 0; font-family: sans-serif; transition: 0.3s;
+:root {
+    --bg: #fafafa;
+    --card: #ffffff;
+    --text: #262626;
+    --accent: #0095f6;
+    --border: #dbdbdb;
+    --insta-grad: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
 }
 
-.screen { 
-    display: flex; flex-direction: column; align-items: center; 
-    justify-content: center; min-height: 100vh; width: 100%;
+body.dark {
+    --bg: #000000;
+    --card: #121212;
+    --text: #ffffff;
+    --border: #333333;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    transition: 0.3s;
+}
+
+.screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
 }
 
 .hidden { display: none !important; }
 
-/* Кнопки и инпуты */
-.btn-big { padding: 30px; font-size: 20px; border: 2px solid var(--text); cursor: pointer; background: transparent; color: var(--text); width: 150px; }
-input { background: transparent; border: none; border-bottom: 2px solid var(--text); color: var(--text); padding: 10px; margin: 10px; font-size: 18px; outline: none; }
-
-/* Рисование */
-#paintCanvas { border: 2px solid var(--text); background: #eee; cursor: crosshair; }
-.colors { display: flex; gap: 5px; margin-top: 10px; }
-.color { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 1px solid #ccc; }
-
-/* Шапка ленты */
-header { 
-    position: fixed; top: 0; width: 100%; max-width: 600px;
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 10px; background: var(--bg); border-bottom: 1px solid #333;
+/* ЛОГОТИП */
+.logo {
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: -2px;
+    background: var(--insta-grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 30px;
+    text-transform: uppercase;
 }
-.ibo-btn { background: var(--text); color: var(--bg); border: none; padding: 5px 15px; border-radius: 20px; font-weight: bold; }
 
-/* Рейтинг кланов */
-#clan-rating { margin-top: 80px; display: flex; gap: 10px; font-size: 12px; }
-.clan-rank { padding: 5px; border: 1px solid #333; border-radius: 5px; }
-
-/* Адаптивность под ПК */
-@media (min-width: 800px) {
-    #screen-main { max-width: 600px; margin: 0 auto; border-left: 1px solid #333; border-right: 1px solid #333; }
+.mini-logo {
+    font-weight: 800;
+    background: var(--insta-grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 24px;
 }
+
+/* КАРТОЧКИ (INSTA/FB STYLE) */
+.auth-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 40px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 350px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.post {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 500px;
+    overflow: hidden;
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ИНПУТЫ И КНОПКИ */
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+    box-sizing: border-box;
+}
+
+.btn-next, .ibo-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+}
+
+.ibo-btn { width: auto; border-radius: 20px; }
+
+/* РИСОВАЛКА */
+#paintCanvas {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    cursor: crosshair;
+}
+
+.colors { display: flex; justify-content: center; gap: 8px; margin-bottom: 15px; }
+.color { width: 25px; height: 25px; border-radius: 50%; cursor: pointer; border: 2px solid var(--border); }
+
+/* ШАПКА */
+header {
+    position: fixed; top: 0; width: 100%;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.header-content {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.main-container {
+    margin-top: 80px;
+    width: 100%;
+    max-width: 500px;
+}
+
+.icon-btn {
+    background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text);
+}
+
+.clan-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px;
+}
+
+.clan-item {
+    font-size: 40px; cursor: pointer; padding: 10px; border: 1px solid var(--border); border-radius: 12px; transition: 0.2s;
+}
+
+.clan-item:hover { background: var(--border); }
