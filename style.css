@@ -1,38 +1,62 @@
-:root { --bg: #0a0a0a; --card: #161616; --text: #fff; --accent: #00d2ff; }
-body.light { --bg: #f9f9f9; --card: #fff; --text: #1a1a1a; --accent: #007bff; }
+:root {
+    --bg: #050505;
+    --glass: rgba(255, 255, 255, 0.03);
+    --border: rgba(255, 255, 255, 0.1);
+    --accent: #00f2ff;
+    --text: #ffffff;
+}
+body.light {
+    --bg: #f0f2f5;
+    --glass: rgba(0, 0, 0, 0.03);
+    --border: rgba(0, 0, 0, 0.1);
+    --accent: #007bff;
+    --text: #111;
+}
 
-body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Manrope', sans-serif; display: flex; transition: 0.3s; }
-.hidden { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Manrope', sans-serif; display: flex; transition: 0.5s; }
 
-/* Боковое меню */
-.sidebar { width: 80px; height: 100vh; border-right: 1px solid rgba(128,128,128,0.2); display: flex; flex-direction: column; align-items: center; padding-top: 20px; position: fixed; }
-.sidebar button { background: none; border: none; color: var(--text); font-size: 24px; margin: 20px 0; cursor: pointer; opacity: 0.6; }
-.sidebar button:hover { opacity: 1; }
-.nav-ava { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--accent); margin-top: auto; margin-bottom: 20px; overflow: hidden; }
+/* БОКОВАЯ ПАНЕЛЬ */
+.sidebar {
+    width: 80px; height: 100vh; background: var(--glass); 
+    backdrop-filter: blur(10px); border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; align-items: center; padding: 20px 0;
+    position: fixed; z-index: 100;
+}
+.nav-link {
+    background: none; border: none; font-size: 22px; margin: 15px 0;
+    cursor: pointer; color: var(--text); opacity: 0.5; transition: 0.3s;
+}
+.nav-link:hover, .nav-link.active { opacity: 1; transform: scale(1.1); color: var(--accent); }
+.user-pill { width: 45px; height: 45px; border-radius: 15px; border: 2px solid var(--accent); cursor: pointer; overflow: hidden; }
 
-/* Кнопка ИБО */
-.ibo-floating-btn { position: fixed; top: 20px; right: 20px; z-index: 1000; background: var(--accent); color: #fff; border: none; padding: 12px 30px; border-radius: 30px; font-weight: 800; cursor: pointer; box-shadow: 0 5px 20px rgba(0, 210, 255, 0.4); }
+/* ГЛАВНАЯ КНОПКА */
+.ibo-btn-main {
+    position: fixed; top: 20px; right: 20px; z-index: 1000;
+    background: linear-gradient(135deg, var(--accent), #7000ff);
+    color: #fff; border: none; padding: 12px 35px; border-radius: 15px;
+    font-weight: 800; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
 
-/* Карточки регистрации */
-.overlay { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: flex; align-items: center; justify-content: center; }
-.card { background: var(--card); padding: 40px; border-radius: 32px; text-align: center; width: 100%; max-width: 360px; border: 1px solid rgba(128,128,128,0.1); }
-.gradient-text { font-size: 60px; background: linear-gradient(45deg, #00d2ff, #9d50bb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+/* КАРТОЧКИ ПОСТОВ */
+.post-card {
+    background: var(--glass); border: 1px solid var(--border);
+    border-radius: 25px; padding: 25px; margin-bottom: 25px;
+    width: 100%; max-width: 550px; backdrop-filter: blur(5px);
+}
+.post-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+.post-header img { width: 50px; height: 50px; border-radius: 18px; object-fit: cover; }
 
-/* Рисовалка */
-#paintCanvas { background: #fff; border-radius: 20px; margin: 20px 0; cursor: crosshair; }
-.palette { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
-.color { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid rgba(0,0,0,0.1); }
+/* ЭФФЕКТЫ */
+.glow-text {
+    font-size: 80px; font-weight: 900; letter-spacing: -5px;
+    background: linear-gradient(to bottom, #fff, #444);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 20px rgba(255,255,255,0.2));
+}
 
-/* Лента */
-.content { flex: 1; margin-left: 80px; padding: 40px; display: flex; flex-direction: column; align-items: center; }
-.post-card { background: var(--card); border-radius: 24px; padding: 20px; width: 100%; max-width: 500px; margin-bottom: 20px; border: 1px solid rgba(128,128,128,0.1); }
-.post-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
-.post-header img { width: 48px; height: 48px; border-radius: 50%; }
-
-/* Голосовые */
-.voice-msg { background: rgba(0, 210, 255, 0.1); padding: 10px; border-radius: 15px; margin-top: 10px; display: flex; align-items: center; gap: 10px; }
-audio { height: 30px; filter: invert(0.8); }
-
-/* Инпуты */
-input, textarea { width: 100%; padding: 14px; margin: 10px 0; border-radius: 12px; border: 1px solid rgba(128,128,128,0.2); background: rgba(128,128,128,0.05); color: var(--text); box-sizing: border-box; }
-.btn-main { background: var(--accent); color: #fff; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 10px; }
+/* ПОИСК */
+.search-bar-top { width: 100%; max-width: 550px; margin-bottom: 30px; }
+.search-bar-top input {
+    width: 100%; background: var(--glass); border: 1px solid var(--border);
+    padding: 15px; border-radius: 15px; color: #fff; outline: none;
+}
