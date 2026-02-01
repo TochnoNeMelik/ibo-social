@@ -2,84 +2,79 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ИБО | NEXT GEN</title>
+    <title>ИБО | СЕТЬ</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body class="dark">
 
-    <button class="ibo-btn-main" onclick="openPostModal()">ИБО</button>
+    <button class="ibo-btn" onclick="openModal()">ИБО</button>
 
-    <nav class="sidebar">
-        <div class="logo-circle">И</div>
-        <div class="menu-group">
-            <button class="nav-link active" onclick="showScreen('screen-main')" title="Лента">🏠</button>
-            <button class="nav-link" onclick="toggleSearch()" title="Поиск">🔍</button>
-            <button class="nav-link" onclick="showNotifications()" title="Уведомления">🔔<span class="badge"></span></button>
-            <button class="nav-link" onclick="showScreen('screen-friends')" title="Друзья">👥</button>
-            <button class="nav-link" onclick="showScreen('screen-clans-list')" title="Кланы">🏆</button>
-        </div>
-        <div class="menu-group bottom">
-            <button class="nav-link" onclick="showScreen('screen-settings')" title="Настройки">⚙️</button>
-            <div id="nav-avatar" class="user-pill" onclick="showScreen('screen-profile')"></div>
-        </div>
+    <nav class="side-nav">
+        <div class="logo">И</div>
+        <button onclick="showScreen('screen-main')">🏠</button>
+        <button onclick="toggleSearch()">🔍</button>
+        <button onclick="showScreen('screen-profile')">👤</button>
+        <div id="user-tag" class="nav-ava">?</div>
     </nav>
 
-    <div id="screen-theme" class="overlay">
-        <div class="glass-card">
-            <h1 class="glow-text">ИБО</h1>
-            <div class="theme-toggle">
-                <button onclick="setTheme('dark')">DARK</button>
-                <button onclick="setTheme('light')" class="light-btn">LIGHT</button>
-            </div>
+    <div id="reg-1" class="overlay">
+        <div class="card">
+            <h1 class="glow">ИБО</h1>
+            <input type="text" id="nick" placeholder="Твой Никнейм">
+            <button onclick="nextStep(2)">ДАЛЕЕ</button>
         </div>
     </div>
 
-    <main id="screen-main" class="content">
-        <div class="search-bar-top hidden" id="top-search">
-            <input type="text" id="global-search" placeholder="Поиск постов или людей..." onkeyup="filterFeed()">
+    <div id="reg-2" class="overlay hidden">
+        <div class="card">
+            <h2>НАРИСУЙ АВАТАР</h2>
+            <canvas id="canvas" width="200" height="200"></canvas>
+            <div class="colors">
+                <button onclick="setCol('#00f2ff')" style="background:#00f2ff"></button>
+                <button onclick="setCol('#ff0055')" style="background:#ff0055"></button>
+                <button onclick="setCol('#fff')" style="background:#fff"></button>
+            </div>
+            <button onclick="nextStep(3)">ГОТОВО</button>
         </div>
-        
-        <div class="stories-row">
-            <div class="story-add">+</div>
-            <div class="story">🔥</div>
-            <div class="story">⚡</div>
-        </div>
+    </div>
 
-        <div id="feed" class="feed-grid"></div>
+    <div id="reg-3" class="overlay hidden">
+        <div class="card">
+            <h2>ВЫБЕРИ КЛАН</h2>
+            <div class="clans">
+                <span onclick="setClan('🔥')">🔥</span>
+                <span onclick="setClan('⚡')">⚡</span>
+                <span onclick="setClan('💀')">💀</span>
+            </div>
+            <button onclick="finishReg()">ВХОД</button>
+        </div>
+    </div>
+
+    <main id="screen-main" class="main-content hidden">
+        <div id="search-box" class="hidden">
+            <input type="text" id="search-in" placeholder="Поиск..." onkeyup="doSearch()">
+        </div>
+        <div id="feed"></div>
     </main>
 
-    <div id="screen-profile" class="content hidden">
-        <div class="profile-card">
-            <div class="profile-bg"></div>
-            <img id="p-ava" src="" alt="">
-            <h2 id="p-name">Username</h2>
-            <p id="p-clan-tag">Клан Огня</p>
-            <div class="stats-row">
-                <div><b>1.2k</b><br>Лайков</div>
-                <div><b id="p-count">0</b><br>Постов</div>
-                <div><b>48</b><br>Друзей</div>
-            </div>
+    <div id="screen-profile" class="main-content hidden">
+        <div class="card">
+            <img id="my-ava" src="" style="width:100px; border-radius:50%">
+            <h2 id="my-nick">Ник</h2>
+            <p id="my-clan">Клан</p>
         </div>
     </div>
 
-    <div id="modal-ibo" class="overlay hidden">
-        <div class="glass-card wide">
-            <h3>Создать мысль</h3>
-            <textarea id="post-text" placeholder="Расскажи миру..."></textarea>
-            <div class="voice-ui">
-                <button id="mic-btn">🎙️ Запись</button>
-                <div class="v-wave" id="wave"><span></span><span></span><span></span></div>
-            </div>
-            <div class="actions">
-                <button onclick="closePostModal()" class="btn-sec">Отмена</button>
-                <button onclick="publishPost()" class="btn-pri">Опубликовать</button>
+    <div id="modal" class="overlay hidden">
+        <div class="card">
+            <textarea id="post-text" placeholder="О чем думаешь?"></textarea>
+            <button id="mic" class="mic-off">🎤 ЗАПИСАТЬ ГОЛОС</button>
+            <div class="btns">
+                <button onclick="closeModal()">ОТМЕНА</button>
+                <button onclick="savePost()" class="blue">ОПУБЛИКОВАТЬ</button>
             </div>
         </div>
     </div>
-
-    <div id="reg-flow" class="overlay hidden"></div>
 
     <script src="script.js"></script>
 </body>
