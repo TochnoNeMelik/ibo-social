@@ -1,94 +1,48 @@
-let currentTheme = 'dark';
-let userClan = '';
-let userAvatar = '';
-let posts = [];
+let postsCount = 12;
+let usersCount = 8;
 
-function showScreen(id) {
+function showScreen(screenId) {
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-    document.getElementById(id).classList.remove('hidden');
-    if(id === 'screen-draw') initCanvas();
+    document.getElementById(screenId).classList.remove('hidden');
 }
 
-function setTheme(theme) {
-    currentTheme = theme;
-    if(theme === 'dark') document.body.classList.add('dark');
-    else document.body.classList.remove('dark');
-    showScreen('screen-reg');
-}
-
-// ЛОГИКА РИСОВАНИЯ
-let canvas, ctx, painting = false, color = '#000';
-
-function initCanvas() {
-    canvas = document.getElementById('paintCanvas');
-    ctx = canvas.getContext('2d');
-    
-    canvas.onmousedown = (e) => { painting = true; draw(e); };
-    canvas.onmouseup = () => { painting = false; ctx.beginPath(); };
-    canvas.onmousemove = draw;
-
-    function draw(e) {
-        if(!painting) return;
-        const rect = canvas.getBoundingClientRect();
-        ctx.lineWidth = document.getElementById('brushSize').value;
-        ctx.lineCap = 'round';
-        ctx.strokeStyle = color;
-        ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-        ctx.stroke();
-    }
-}
-
-function setColor(c) { color = c; }
-
-function selectClan(emoji) {
-    userClan = emoji;
-    userAvatar = canvas.toDataURL();
+function finishReg() {
     const nick = document.getElementById('reg-nick').value;
-    document.getElementById('user-name') ? document.getElementById('user-name').innerText = nick : null;
-    showScreen('screen-main');
-    // Добавим приветственный пост
-    posts.push({author: 'Система', text: `Добро пожаловать в ИБО, ${nick}!`, clan: '🤖', avatar: userAvatar});
-    renderFeed(posts);
-}
-
-// ПОСТЫ И ПОИСК
-function openPostModal() {
-    const msg = prompt("О чем ты думаешь? (ИБО)");
-    if(msg) {
-        const newPost = {
-            author: document.getElementById('reg-nick').value,
-            text: msg,
-            clan: userClan,
-            avatar: userAvatar
-        };
-        posts.unshift(newPost);
-        renderFeed(posts);
+    if(nick) {
+        document.getElementById('screen-reg').classList.add('hidden');
+        // Создаем первый пост
+        addPostToFeed(nick, "Я теперь в ИБО!", "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500");
     }
 }
 
-function renderFeed(items) {
+function openPostModal() {
+    const text = prompt("О чем думаешь?");
+    if(text) {
+        addPostToFeed("Вы", text);
+        postsCount++;
+        document.getElementById('stat-posts').innerText = postsCount;
+    }
+}
+
+function addPostToFeed(name, text, imgUrl = null) {
     const feed = document.getElementById('feed');
-    feed.innerHTML = '';
-    items.forEach(post => {
-        feed.innerHTML += `
-            <div class="post">
-                <div style="padding: 12px; display: flex; align-items: center; gap: 10px;">
-                    <img src="${post.avatar}" style="width:32px; height:32px; border-radius:50%; background:#eee;">
-                    <span style="font-weight:700;">${post.author} ${post.clan}</span>
-                </div>
-                <div style="padding: 0 15px 15px 15px; line-height: 1.4;">${post.text}</div>
+    const post = document.createElement('div');
+    post.className = 'post-card';
+    
+    let imgHtml = imgUrl ? `<img src="${imgUrl}">` : "";
+    
+    post.innerHTML = `
+        <div class="post-user-info">
+            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=${name}">
+            <div>
+                <strong>${name}</strong><br>
+                <small style="color:gray">1 минуту назад</small>
             </div>
-        `;
-    });
-}
-
-function toggleSearch() {
-    const bar = document.getElementById('search-bar');
-    bar.classList.toggle('hidden');
-}
-
-function search() {
-    const q = document.getElementById('search-input').value.toLowerCase();
-    const filtered = posts.filter(p => p.text.toLowerCase().includes(q) || p.author.toLowerCase().includes(q));
-    renderFeed(filtered);
+        </div>
+        <div class="post-content">
+            ${text}
+            ${imgHtml}
+        </div>
+    `;
+    feed.prepend(post);
 }
