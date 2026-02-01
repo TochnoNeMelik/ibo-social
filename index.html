@@ -1,1 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ИБО</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+    <div id="screen-theme" class="screen">
+        <h1>ИБО</h1>
+        <p>ВЫБЕРИ СТОРОНУ</p>
+        <div class="flex-row">
+            <button class="btn-big dark" onclick="setTheme('dark')">ЧЕРНЫЙ</button>
+            <button class="btn-big light" onclick="setTheme('light')">БЕЛЫЙ</button>
+        </div>
+    </div>
+
+    <div id="screen-reg" class="screen hidden">
+        <h1>КТО ТЫ?</h1>
+        <input type="text" id="reg-nick" placeholder="Никнейм">
+        <input type="password" id="reg-pass" placeholder="Пароль">
+        <button class="btn-next" onclick="showScreen('screen-email')">ДАЛЕЕ</button>
+    </div>
+
+    <div id="screen-email" class="screen hidden">
+        <h1>СВЯЗЬ</h1>
+        <input type="email" id="reg-email" placeholder="Эл. почта">
+        <button class="btn-next" onclick="showScreen('screen-draw')">ПОДТВЕРДИТЬ</button>
+    </div>
+
+    <div id="screen-draw" class="screen hidden">
+        <h1>ТВОЙ ВИД</h1>
+        <canvas id="paintCanvas" width="250" height="250"></canvas>
+        <div class="controls">
+            <input type="range" id="brushSize" min="1" max="20" value="5">
+            <div class="colors">
+                <div class="color" style="background:red" onclick="setColor('red')"></div>
+                <div class="color" style="background:blue" onclick="setColor('blue')"></div>
+                <div class="color" style="background:green" onclick="setColor('green')"></div>
+                <div class="color" style="background:yellow" onclick="setColor('yellow')"></div>
+                <div class="color" style="background:white" onclick="setColor('white')"></div>
+                <div class="color" style="background:black" onclick="setColor('black')"></div>
+            </div>
+        </div>
+        <button class="btn-next" onclick="showScreen('screen-clans')">ГОТОВО</button>
+    </div>
+
+    <div id="screen-clans" class="screen hidden">
+        <h1>КЛАН</h1>
+        <div class="clan-grid">
+            <div class="clan-item" onclick="selectClan('🔥')">🔥</div>
+            <div class="clan-item" onclick="selectClan('⚡')">⚡</div>
+            <div class="clan-item" onclick="selectClan('💎')">💎</div>
+            <div class="clan-item" onclick="selectClan('💀')">💀</div>
+            <div class="clan-item" onclick="selectClan('👑')">👑</div>
+        </div>
+    </div>
+
+    <div id="screen-main" class="screen hidden">
+        <header>
+            <div class="user-info">
+                <img id="user-ava" src="" alt="">
+                <span id="user-name">Nick</span>
+            </div>
+            <div class="header-btns">
+                <button onclick="showScreen('screen-search')">🔍</button>
+                <button onclick="showScreen('screen-chats')">💬</button>
+                <button class="ibo-btn" onclick="openPostModal()">ИБО</button>
+            </div>
+        </header>
+        
+        <div id="clan-rating">
+            <div class="clan-rank">👑 1 место</div>
+            <div class="clan-rank">🔥 2 место</div>
+        </div>
+
+        <div id="feed">
+            </div>
+    </div>
+
+    <div id="screen-search" class="screen hidden">
+        <input type="text" placeholder="Поиск..." id="search-input">
+        <div class="search-tabs">
+            <button>Все</button>
+            <button>Люди</button>
+            <button>Посты</button>
+            <button>Сообщества</button>
+        </div>
+        <button onclick="showScreen('screen-main')">Назад</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
