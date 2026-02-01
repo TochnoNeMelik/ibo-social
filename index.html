@@ -3,59 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ИБО | ИТД Style</title>
+    <title>ИБО | ИТД</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
-<body class="dark"> <nav class="side-menu">
+<body class="dark">
+
+    <nav class="side-menu">
         <div class="mini-logo">ИБО</div>
-        <button class="menu-item" onclick="showScreen('screen-main')">🏠</button>
-        <button class="menu-item" onclick="showScreen('screen-search')">🔍</button>
-        <button class="menu-item" onclick="showScreen('screen-dashboard')">📊</button>
+        <button class="menu-item" title="Лента" onclick="showScreen('screen-main')">🏠</button>
+        <button class="menu-item" title="Поиск" onclick="showScreen('screen-search')">🔍</button>
+        <button class="menu-item" title="Дашборд" onclick="showScreen('screen-dashboard')">📊</button>
+        <button class="menu-item" title="Группы" onclick="showScreen('screen-groups')">👥</button>
         <button class="menu-item plus-btn" onclick="openPostModal()">+</button>
+        <div class="user-avatar-small" id="nav-avatar"></div>
     </nav>
 
     <main id="screen-main" class="screen">
-        <div class="feed-container" id="feed">
-            </div>
+        <div class="feed-container" id="feed"></div>
     </main>
 
     <div id="screen-dashboard" class="screen hidden">
         <div class="dash-container">
-            <h1>Welcome back!</h1>
-            <p>Вот что происходит на платформе сегодня:</p>
+            <h1 id="welcome-user">Welcome back!</h1>
             <div class="stat-grid">
                 <div class="stat-card blue">
-                    <span class="icon">👤</span>
-                    <div class="num" id="stat-users">8</div>
-                    <div class="label">Всего юзеров</div>
+                    <div class="num" id="stat-users">1</div>
+                    <div class="label">Твои друзья</div>
                 </div>
                 <div class="stat-card green">
-                    <span class="icon">📝</span>
-                    <div class="num" id="stat-posts">12</div>
-                    <div class="label">Постов создано</div>
+                    <div class="num" id="stat-posts">0</div>
+                    <div class="label">Твои посты</div>
                 </div>
                 <div class="stat-card yellow">
-                    <span class="icon">💬</span>
-                    <div class="num" id="stat-comments">24</div>
-                    <div class="label">Комментариев</div>
-                </div>
-                <div class="stat-card live">
-                    <span class="icon">🟢</span>
-                    <div class="num">3</div>
-                    <div class="label">Онлайн</div>
+                    <div class="num" id="stat-clans">1</div>
+                    <div class="label">Место клана</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="screen-reg" class="screen-overlay">
+    <div id="screen-groups" class="screen hidden">
+        <div class="feed-container">
+            <h2>Твои сообщества</h2>
+            <div id="groups-list">
+                <div class="group-item">Клан <span id="user-clan-tag"></span> (Основной)</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen-reg" class="screen-overlay hidden">
         <div class="auth-card">
-            <div class="logo-circle">🌐</div>
             <h2>Добро пожаловать!</h2>
-            <p>Настрой свой профиль</p>
             <input type="text" id="reg-nick" placeholder="Имя">
             <input type="text" id="reg-user" placeholder="@юзернейм">
+            <div class="clan-select-label">Выбери свой клан навсегда:</div>
+            <div class="clan-grid-reg">
+                <span onclick="selectRegClan('🔥')">🔥</span>
+                <span onclick="selectRegClan('⚡')">⚡</span>
+                <span onclick="selectRegClan('👑')">👑</span>
+                <span onclick="selectRegClan('💀')">💀</span>
+            </div>
             <button class="start-btn" onclick="finishReg()">Начать</button>
         </div>
     </div>
